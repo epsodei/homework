@@ -1,72 +1,99 @@
 
+
 var HelloWorldLayer = cc.Layer.extend({
     sprite:null,
+    shapes:[],
+    drawNode:null,
     ctor:function () {
         //////////////////////////////
         // 1. super init first
         this._super();
 
-        /////////////////////////////
-        // 2. add a menu item with "X" image, which is clicked to quit the program
-        //    you may modify it.
-        // ask the window size
-        var size = cc.winSize;
-
-        // add a "close" icon to exit the progress. it's an autorelease object
-        var closeItem = new cc.MenuItemImage(
-            res.CloseNormal_png,
-            res.CloseSelected_png,
-            function () {
-                cc.log("Menu is clicked!");
-            }, this);
-        closeItem.attr({
-            x: size.width - 20,
-            y: 20,
-            anchorX: 0.5,
-            anchorY: 0.5
+        var fireSprite = new cc.Sprite("res/firefox.png");
+        fireSprite.scale = 0.5;    				
+        fireSprite.x = this.width/2;
+        fireSprite.y = this.height/2;
+        this.addChild(fireSprite);
+        
+        var firstLabel = new cc.LabelTTF('hihihihihi',  'Times New Roman', 32);
+        this.addChild(firstLabel);
+        firstLabel.x= 100;
+        firstLabel.y = 100;
+        
+        var textField = new cc.TextFieldTTF("", cc.size(100,50), 
+        		cc.TEXT_ALIGNMENT_LEFT,"Arial", 32);
+        
+        
+        /*
+        var eventListener = new cc.EventListener.create({
+        	event:cc.EventListener.TOUCH_ONE_BY_ONE,
+        	swallowTouches:true,
+        	onTouchBegan:function(touch,event){
+        		cc.log("touched");
+        		return true;
+        	},
+        	onTouchMoved:this.touchMovedListener
         });
-
-        var menu = new cc.Menu(closeItem);
-        menu.x = 0;
-        menu.y = 0;
-        this.addChild(menu, 1);
-
-        /////////////////////////////
-        // 3. add your codes below...
-        // add a label shows "Hello World"
-        // create and initialize a label
-        var helloLabel = new cc.LabelTTF("Hello World", "Arial", 38);
-        // position the label on the center of the screen
-        helloLabel.x = size.width / 2;
-        helloLabel.y = 0;
-        // add the label as a child to this layer
-        this.addChild(helloLabel, 5);
-
-        // add "HelloWorld" splash screen"
-        this.sprite = new cc.Sprite(res.HelloWorld_png);
-        this.sprite.attr({
-            x: size.width / 2,
-            y: size.height / 2,
-            scale: 0.5,
-            rotation: 180
+        cc.eventManager.addListener(eventListener, this);
+        cc.eventManager.addListener({
+        	event:cc.EventListener.TOUCH_ONE_BY_ONE,
+        	swallowTouches:true,
+        	onTouchBegan: function(touch,event){
+        		cc.log("touched");
+        		return true;
+        	},
+        	onTouchMoved:this.touchMovedListener
+        }, this);
+    
+        var drawNode = new cc.DrawNode();
+        this.addChild(drawNode);
+        
+        var listener = cc.EventListener.create({
+        	event:cc.EventListener.TOUCH_ONE_BY_ONE,
+        	swallowTouches:true,
+        	onTouchBegan:function(touch,event){
+        		cc.log("touched");
+        		return true;
+        	},
+        	onTouchMoved:function(touch,event){
+        		//var p1 = touch.getPreviousLocation();
+        		//var p2 = touch.getLocation();
+        		//drawNode.drawSegment(p1,p2,2,cc.color(160,20,20));
+        		return true;
+        	},
+        	onTouchEnded:function(touch,event){
+        		var p1 = touch.getStartLocation();
+        		var p2 = touch.getLocation();
+        		event.getCurrentTarget().shapes.push(p1,p2);
+        		
+        		drawNode.drawSegment(p1,p2,2,cc.color(160,20,20));
+        		return true;
+        	},
+        	undo:function(){
+        		this.shapes.pop();
+        		this.shapes.pop();
+        		this.drawNode.clear();
+        	}
         });
-        this.addChild(this.sprite, 0);
-
-        this.sprite.runAction(
-            cc.sequence(
-                cc.rotateTo(2, 0),
-                cc.scaleTo(2, 1, 1)
-            )
-        );
-        helloLabel.runAction(
-            cc.spawn(
-                cc.moveBy(2.5, cc.p(0, size.height - 40)),
-                cc.tintTo(2.5,255,125,0)
-            )
-        );
+        cc.eventManager.addListener(listener, this);
+        */
+       /* onTouchBegan:function(touch, event){
+        	var size = event.getCurrentTarget().getContentSize();//get touched object's size
+        	var touchPosition = event.getCurrentTarget().convertToNodeSpace(touch.getLocation());
+        	if(cc.rectContainsPoint(cc.rect(0,0,size.width, size.height), touchPosition)){
+        		cc.log("touched");
+        	}
+        	return true;
+        }*/
+        
         return true;
     }
 });
+
+
+
+
+
 
 var HelloWorldScene = cc.Scene.extend({
     onEnter:function () {
